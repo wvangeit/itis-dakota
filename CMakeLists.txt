@@ -1,13 +1,15 @@
 cmake_minimum_required(VERSION 3.15)
 project(itis_dakota)
 
-add_definitions(-w)
 
 find_package(Threads REQUIRED)
 
 set(PY_BUILD_CMAKE_BIN_DIRECTORY ${PY_BUILD_CMAKE_PACKAGE_NAME}-${PY_BUILD_CMAKE_PACKAGE_VERSION}.data/scripts)
 set(PY_BUILD_CMAKE_LIB_DIRECTORY ${PY_BUILD_CMAKE_PACKAGE_NAME}-${PY_BUILD_CMAKE_PACKAGE_VERSION}.data/platlib)
 
+add_compile_options(-w)
+# add_compile_options(-Wno-psabi)
+add_compile_definitions(BOOST_BIND_GLOBAL_PLACEHOLDERS)
 add_subdirectory(dakota EXCLUDE_FROM_ALL)
 
 add_custom_target(dakota_for_python ALL DEPENDS environment dakota_src)
@@ -16,6 +18,7 @@ add_custom_target(dakota_for_python ALL DEPENDS environment dakota_src)
 #         RUNTIME
 #         COMPONENT dakota_for_python
 #         DESTINATION ${PY_BUILD_CMAKE_BIN_DIRECTORY})
+
 
 install(TARGETS dakota_src
         LIBRARY
