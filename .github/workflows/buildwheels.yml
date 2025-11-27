@@ -75,9 +75,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: ccache-${{ runner.os }}-${{ matrix.wheel-platform }}-${{ hashFiles('dakota/**/*.cpp', 'dakota/**/*.hpp', 'dakota/**/*.c', 'dakota/**/*.h') }}
+          key: ccache-${{ runner.os }}-${{ matrix.wheel-platform }}-${{ env.CIBW_PYTHON }}-${{ hashFiles('dakota/**/*.cpp', 'dakota/**/*.hpp', 'dakota/**/*.c', 'dakota/**/*.h') }}
           restore-keys: |
-            ccache-${{ runner.os }}-${{ matrix.wheel-platform }}-
+            ccache-${{ runner.os }}-${{ matrix.wheel-platform }}-${{ env.CIBW_PYTHON }}
       - name: Get dakota src
         run: make get-dakota-src
       - uses: pypa/cibuildwheel@v3.3
