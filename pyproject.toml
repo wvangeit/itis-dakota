@@ -52,11 +52,6 @@ CMAKE_C_COMPILER_LAUNCHER = "ccache"
 CMAKE_CXX_COMPILER_LAUNCHER = "ccache"
 
 [tool.cibuildwheel.linux]
-environment-pass = [
-    "ACTIONS_CACHE_URL",
-    "ACTIONS_RUNTIME_TOKEN",
-    "CCACHE_DIR"
-]
 before-all = [
     "yum install -y epel-release yum-utils",
     "yum-config-manager --enable epel",
@@ -64,6 +59,10 @@ before-all = [
     "yum install -y lapack-devel boost1.78-devel blas-devel hdf5-devel zip unzip wget gsl-devel ccache",
     "pip install setuptools_scm",
     "python -m setuptools_scm --force-write-version-files",
+]
+environment-pass = [
+    "ACTIONS_CACHE_URL",
+    "ACTIONS_RUNTIME_TOKEN"
 ]
 skip = "*-musllinux_*"
 manylinux-x86_64-image="quay.io/pypa/manylinux_2_28_x86_64"
