@@ -47,12 +47,12 @@ BOOST_LIBRARYDIR = "/usr/lib64/boost1.78"
 BOOST_INCLUDEDIR = "/usr/include/boost1.78"
 CMAKE_C_COMPILER_LAUNCHER = "ccache"
 CMAKE_CXX_COMPILER_LAUNCHER = "ccache"
-CCACHE_DIR = "/host/.ccache"
 
 [tool.cibuildwheel.linux]
 environment-pass = [
     "ACTIONS_CACHE_URL",
-    "ACTIONS_RUNTIME_TOKEN"
+    "ACTIONS_RUNTIME_TOKEN",
+    "CCACHE_DIR"
 ]
 before-all = [
     "yum install -y epel-release yum-utils",
