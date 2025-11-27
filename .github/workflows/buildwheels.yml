@@ -67,6 +67,12 @@ jobs:
               with:
                   python-version: ${{ matrix.python }}
                   cache: 'pip'
+            - name: Setup ccache
+              uses: actions/cache@v4
+              with:
+                path: ~/.ccache
+                key: ccache-${{ runner.os }}-${{ github.sha }}
+                restore-keys: ccache-${{ runner.os }}-
             - name: Get dakota src
               run: make get-dakota-src
             - uses: pypa/cibuildwheel@v3.3

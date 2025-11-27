@@ -1,5 +1,5 @@
 diff --git a/src/dakota_python.cpp b/src/dakota_python.cpp
-index 88ec00d..bc2ba64 100644
+index 88ec00d..6a608de 100644
 --- a/src/dakota_python.cpp
 +++ b/src/dakota_python.cpp
 @@ -95,7 +95,8 @@ namespace python {
@@ -23,14 +23,13 @@ index 88ec00d..bc2ba64 100644
  
        auto p_libEnv = new Dakota::LibraryEnvironment(opts);
  
-@@ -190,10 +195,12 @@ PYBIND11_MODULE(environment, m) {
+@@ -190,10 +195,11 @@ PYBIND11_MODULE(environment, m) {
    py::class_<Dakota::LibraryEnvironment>(m, "study")
      .def(py::init
  	 ([](py::object callback,
 -	     const std::string& input_string)
 +	     const std::string& input_string,
-+         const std::string& read_restart = "")
-+     )
++       const std::string& read_restart = "")
  	  {
  	    assert(!input_string.empty());
 -            auto p_libEnv = Dakota::python::create_libEnv(input_string);
@@ -38,7 +37,7 @@ index 88ec00d..bc2ba64 100644
  
              // Associate the single python callback with all Pybind11Interface interfaces
              Dakota::InterfaceList & interfaces = Dakota::Interface::interface_cache(p_libEnv->problem_description_db());
-@@ -208,14 +215,15 @@ PYBIND11_MODULE(environment, m) {
+@@ -208,14 +214,15 @@ PYBIND11_MODULE(environment, m) {
  
  	    return p_libEnv;
  	  })
@@ -57,7 +56,7 @@ index 88ec00d..bc2ba64 100644
  
              // Associate callbacks with interface specs
              auto callbacks_map = callbacks.cast< std::map<std::string,py::function> >();
-@@ -241,7 +249,7 @@ PYBIND11_MODULE(environment, m) {
+@@ -241,7 +248,7 @@ PYBIND11_MODULE(environment, m) {
  
  	    return p_libEnv;
  	  })

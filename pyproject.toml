@@ -45,6 +45,9 @@ build-frontend = "build[uv]"
 [tool.cibuildwheel.environment]
 BOOST_LIBRARYDIR = "/usr/lib64/boost1.78"
 BOOST_INCLUDEDIR = "/usr/include/boost1.78"
+CMAKE_C_COMPILER_LAUNCHER = "ccache"
+CMAKE_CXX_COMPILER_LAUNCHER = "ccache"
+CCACHE_DIR = "/host/.ccache"
 
 [tool.cibuildwheel.linux]
 environment-pass = [
@@ -55,7 +58,7 @@ before-all = [
     "yum install -y epel-release yum-utils",
     "yum-config-manager --enable epel",
     "yum makecache --refresh",
-    "yum install -y lapack-devel boost1.78-devel blas-devel hdf5-devel zip unzip wget gsl-devel",
+    "yum install -y lapack-devel boost1.78-devel blas-devel hdf5-devel zip unzip wget gsl-devel ccache",
     "pip install setuptools_scm",
     "python -m setuptools_scm --force-write-version-files",
 ]
@@ -67,6 +70,10 @@ source_path = "."
 build_args = ["-j8"]
 build_type = "Release"
 install_components = ["dakota_for_python"]
+
+[tool.py-build-cmake.cmake.env]
+CMAKE_C_COMPILER_LAUNCHER = "ccache"
+CMAKE_CXX_COMPILER_LAUNCHER = "ccache"
 
 [tool.py-build-cmake.cmake.options]
 DAKOTA_HAVE_HDF5 = "ON"

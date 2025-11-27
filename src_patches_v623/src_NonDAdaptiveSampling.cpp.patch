@@ -1,5 +1,5 @@
 diff --git a/src/NonDAdaptiveSampling.cpp b/src/NonDAdaptiveSampling.cpp
-index 581f797..507b42c 100644
+index 581f797..089ca5d 100644
 --- a/src/NonDAdaptiveSampling.cpp
 +++ b/src/NonDAdaptiveSampling.cpp
 @@ -299,14 +299,39 @@ namespace Dakota
@@ -29,7 +29,7 @@ index 581f797..507b42c 100644
 +            
 +                for(int i = 0; i < new_Xs.size(); i++) 
 +                {
-+                    iteratedModel->continuous_variables(new_Xs[i]);
++                    ModelUtils::continuous_variables(*iteratedModel, new_Xs[i]);
 +                    iteratedModel->evaluate_nowait();
 +                    points_to_add.push_back(iteratedModel->current_variables());
 +                }
@@ -40,7 +40,7 @@ index 581f797..507b42c 100644
 +            else {
 +                for(int i = 0; i < new_Xs.size(); i++) 
 +                {
-+                    iteratedModel->continuous_variables(new_Xs[i]);
++                    ModelUtils::continuous_variables(*iteratedModel, new_Xs[i]);
 +                    iteratedModel->evaluate();
 +                    responses_to_add.insert(IntResponsePair(iteratedModel->evaluation_id(),
 +                                            iteratedModel->current_response()));
