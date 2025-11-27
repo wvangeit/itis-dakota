@@ -69,7 +69,7 @@ jobs:
                   cache: 'pip'
             - name: Get dakota src
               run: make get-dakota-src
-            - uses: pypa/cibuildwheel@v3.0
+            - uses: pypa/cibuildwheel@v3
               env:
                 CIBW_BUILD: ${{ env.CIBW_PYTHON }}-*
                 CIBW_ARCHS: ${{ matrix.wheel-platform }}
