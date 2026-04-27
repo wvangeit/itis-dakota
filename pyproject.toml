@@ -32,12 +32,15 @@ backend-path = ["."]
 packages = ["itis_dakota"]
 package-dir = {"itis_dakota" = "itis_dakota"}
 
+[tool.setuptools.package-data]
+itis_dakota = ["py.typed"]
+
 [tool.setuptools_scm]
 version_file = "itis_dakota/_version.py"
 local_scheme = "no-local-version"
 
 [tool.cibuildwheel]
-repair-wheel-command = "auditwheel repair -w {dest_dir} {wheel} && ./scripts/fix_wheel.sh {dest_dir}"
+repair-wheel-command = "./scripts/repair_wheel.sh {dest_dir} {wheel}"
 build-verbosity = 1
 build-frontend = "build[uv]"
 
@@ -45,19 +48,26 @@ build-frontend = "build[uv]"
 [tool.cibuildwheel.environment]
 BOOST_LIBRARYDIR = "/usr/lib64/boost1.78"
 BOOST_INCLUDEDIR = "/usr/include/boost1.78"
+CMAKE_C_COMPILER_LAUNCHER = "sccache"
+CMAKE_CXX_COMPILER_LAUNCHER = "sccache"
+SCCACHE_GHA_ENABLED = "true"
 
 [tool.cibuildwheel.linux]
-environment-pass = [
-    "ACTIONS_CACHE_URL",
-    "ACTIONS_RUNTIME_TOKEN"
-]
 before-all = [
+    "pushd /opt/_internal && tar xf static-libs-for-embedding-only.tar.xz && popd",
     "yum install -y epel-release yum-utils",
     "yum-config-manager --enable epel",
     "yum makecache --refresh",
-    "yum install -y lapack-devel boost1.78-devel blas-devel hdf5-devel zip unzip wget gsl-devel",
+    "yum install -y lapack-devel boost1.78-devel blas-devel hdf5-devel zip unzip wget gsl-devel ccache",
+    "SCCACHE_V=v0.14.0; ARCH=$(uname -m); wget -q https://github.com/mozilla/sccache/releases/download/${SCCACHE_V}/sccache-${SCCACHE_V}-${ARCH}-unknown-linux-musl.tar.gz -O /tmp/sccache.tar.gz && tar xf /tmp/sccache.tar.gz -C /tmp && cp /tmp/sccache-${SCCACHE_V}-${ARCH}-unknown-linux-musl/sccache /usr/local/bin/sccache && chmod +x /usr/local/bin/sccache && rm -rf /tmp/sccache*",
+    "sccache --start-server && echo 'sccache server started successfully' && sccache --show-stats",
     "pip install setuptools_scm",
     "python -m setuptools_scm --force-write-version-files",
+]
+environment-pass = [
+    "ACTIONS_RESULTS_URL",
+    "ACTIONS_RUNTIME_TOKEN",
+    "ACTIONS_CACHE_SERVICE_V2"
 ]
 skip = "*-musllinux_*"
 manylinux-x86_64-image="quay.io/pypa/manylinux_2_28_x86_64"
@@ -76,6 +86,8 @@ DAKOTA_PYTHON_WRAPPER = "ON"
 DAKOTA_PYTHON_DIRECT_INTERFACE = "ON"
 BUILD_SHARED_LIBS = "OFF"
 CMAKE_POSITION_INDEPENDENT_CODE = "ON"
+CXX_FLAGS = "-w"
+CMAKE_CXX_FLAGS = "-Wno-psabi"
 
 [tool.pytest.ini_options]
 addopts = "--ignore=dakota/"
